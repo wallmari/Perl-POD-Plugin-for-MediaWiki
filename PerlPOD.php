@@ -15,7 +15,7 @@ $wgExtensionCredits['parserhook'][] = array(
 	'author'         => 'Richard Wallman',
 	'description'    => 'Embed Perl POD (formatted for MediaWiki) in a page',
 	'descriptionmsg' => 'perlpod-desc',
-	'version'	 => '0.1',
+	'version'	 => '0.2',
 );
 
 $wgHooks['ParserFirstCallInit'][] = 'PerlPOD_Setup';
@@ -37,12 +37,12 @@ function PerlPOD_Render( $parser, $param = '' ) {
 
 	// We'll use these for getting data into and out from the utilities
 	$d = array(
-			0 => array("pipe", "r"),
-			1 => array("pipe", "w"),
+			1 => array("pipe", "w")
 		  );
 
-	// Round 1: Get the POD. We use perldoc to extract the POD because...it's easier that way :)
-	$ph = proc_open("perldoc -u $module", $d, $p);
+	// Get the POD and render it directly into MediaWiki markup.
+	// We use perldoc to extract the POD because...it's easier that way :)
+	$ph = proc_open("perldoc -M Pod::Simple::Wiki::Mediawiki $module", $d, $p);
 	$pod = stream_get_contents($p[1]);
 	fclose($p[1]);
 	$error = proc_close($ph);
@@ -57,26 +57,7 @@ function PerlPOD_Render( $parser, $param = '' ) {
 			break;
 	};
 
-	// Round 2: Turn the POD into Mediawiki markup
-	// We use pod2wiki (part of Pod::Simple::Wiki) because...it's easier that way :)
-	$ph = proc_open('pod2wiki --style mediawiki -', $d, $p);
-
-	// POD goes in
-	fwrite( $p[0], $pod );
-	fclose( $p[0] );
-
-	// Wiki markup comes out
-	$output = stream_get_contents($p[1]);
-	fclose($p[1]);
-
-	// As we fed input and caught output, ASSume the only thing that can go wrong is pod2wiki not being installed
-	// Yeah...BRB, feeding my unicorn...
-	if ( proc_close($ph) ) {
-		return "{error running pod2wiki - please ensure it's installed properly}";
-	}
-
-	// Return the wiki markup
-	return $output;
+	return $pod;
 }
 
 ?>
