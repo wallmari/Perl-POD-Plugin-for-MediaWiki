@@ -6,11 +6,10 @@ in a single documentation system.
 
 # Why?
 
-It's hard to argue that, thanks to Wikipedia, MediaWiki is possibly the best
-known wiki engine around. There's plenty of information to help beginners to
-get to grips with creating and editing articles, there are plenty of existing
-extensions to add features to MediaWiki, and there's an internal API to
-extend MediaWiki if necessary.
+Thanks to Wikipedia, MediaWiki is possibly the best known wiki engine around.
+There's plenty of information to help beginners to get to grips with creating
+and editing articles, there are plenty of existing extensions to add features
+to MediaWiki, and there's an internal API to extend MediaWiki if necessary.
 
 POD has long been the preferred way of documenting Perl code - the inline
 nature of it means it's easily found, easy to keep updated, and the simple
